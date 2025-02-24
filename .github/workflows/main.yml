@@ -32,14 +32,30 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd projectNeon-main
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          if [ -f projectNeon-main/requirementsSelfBot.txt ]; then
+            pip install -r projectNeon-main/requirementsSelfBot.txt
+          fi
+          if [ -f projectNeon-main/requirements.txt ]; then
+            pip install -r projectNeon-main/requirements.txt
+          fi
+
+      - name: List directory structure
+        run: |
+          pwd
+          ls -R projectNeon-main/
 
       - name: Run Python script
         run: |
           cd projectNeon-main/src
-          python main.py
+          # Flask serverは必要な場合のみ起動
+          # python endpoints.py &
+          # selfDiscordBotのパスを確認して実行
+          if [ -f selfDiscordBot.py ]; then
+            python selfDiscordBot.py
+          elif [ -f selfBot/selfDiscordBot.py ]; then
+            python selfBot/selfDiscordBot.py
+          fi
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -47,7 +63,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './projectNeon-main/src/dist'  # ビルド出力先のディレクトリを指定
+          path: './projectNeon-main/src/dist'
 
       - name: Deploy to GitHub Pages
         id: deployment
