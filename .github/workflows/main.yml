@@ -19,7 +19,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: windows-latest  # Windows環境を使用
+    runs-on: windows-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -35,12 +35,14 @@ jobs:
           python -m pip install --upgrade pip
           cd projectNeon-main
           pip install -r requirements.txt
+          pip install capmonster-python
         shell: cmd
 
-      - name: Run Python scripts
+      - name: Build static files
         run: |
           cd projectNeon-main\src
-          start /b python SelfDiscordBot.py
+          # ここでビルドスクリプトを実行
+          # 例: python build.py や必要なファイル生成コマンド
           python main.py
         shell: cmd
 
