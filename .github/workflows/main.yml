@@ -19,7 +19,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
+    runs-on: windows-latest  # Windows環境を使用
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -33,29 +33,16 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          if [ -f projectNeon-main/requirementsSelfBot.txt ]; then
-            pip install -r projectNeon-main/requirementsSelfBot.txt
-          fi
-          if [ -f projectNeon-main/requirements.txt ]; then
-            pip install -r projectNeon-main/requirements.txt
-          fi
+          cd projectNeon-main
+          pip install -r requirements.txt
+        shell: cmd
 
-      - name: List directory structure
+      - name: Run Python scripts
         run: |
-          pwd
-          ls -R projectNeon-main/
-
-      - name: Run Python script
-        run: |
-          cd projectNeon-main/src
-          # Flask serverは必要な場合のみ起動
-          # python endpoints.py &
-          # selfDiscordBotのパスを確認して実行
-          if [ -f selfDiscordBot.py ]; then
-            python selfDiscordBot.py
-          elif [ -f selfBot/selfDiscordBot.py ]; then
-            python selfBot/selfDiscordBot.py
-          fi
+          cd projectNeon-main\src
+          start /b python SelfDiscordBot.py
+          python main.py
+        shell: cmd
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
