@@ -1,0 +1,6 @@
+discord.py
+cx_Freeze
+requests
+requests[socks]
+py7zr
+Flask

